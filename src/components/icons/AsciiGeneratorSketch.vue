@@ -1,12 +1,14 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import p5 from 'p5'
 
 const canvasContainer = ref(null)
-const CANVAS_SIZE = 900
+const CANVAS_SIZE = 700
 
+const brightnessThreshold = ref(155)
 let asciiSketch = null
 let mainImage = null
+let redrawTimeout = null
 
 const sketch = (p) => {
   const charSet = "@%#*+=-:. "
@@ -48,17 +50,18 @@ const sketch = (p) => {
 
     for (let y = 0; y < rows; y++) {
       for (let x = 0; x < cols; x++) {
-        let px = Math.floor((x * mainImage.width) / cols)
-        let py = Math.floor((y * mainImage.height) / rows)
-        let idx = 4 * (py * mainImage.width + px)
+        const px = Math.floor((x * mainImage.width) / cols)
+        const py = Math.floor((y * mainImage.height) / rows)
+        const idx = 4 * (py * mainImage.width + px)
 
-        let r = mainImage.pixels[idx]
-        let g = mainImage.pixels[idx + 1]
-        let b = mainImage.pixels[idx + 2]
-        let bright = (r + g + b) / 3
+        const r = mainImage.pixels[idx]
+        const g = mainImage.pixels[idx + 1]
+        const b = mainImage.pixels[idx + 2]
+        const bright = (r + g + b) / 3
 
-        let charIndex = Math.floor(p.map(bright, 0, 255, 0, charSet.length - 1))
-        let c = charSet.charAt(charIndex)
+        const maxThreshold = Number(brightnessThreshold.value) || 155
+        const charIndex = Math.floor(p.map(bright, 0, maxThreshold, 0, charSet.length - 1))
+        const c = charSet.charAt(Math.max(0, Math.min(charSet.length - 1, charIndex)))
 
         p.fill(255)
         p.text(c, x * tileW + tileW / 2, y * tileH + tileH / 2)
@@ -67,6 +70,7 @@ const sketch = (p) => {
   }
 }
 
+// File input handler
 function onFileChange(event) {
   const file = event.target.files[0]
   if (file) {
@@ -84,6 +88,7 @@ function onFileChange(event) {
   }
 }
 
+// Initialize and cleanup
 onMounted(() => {
   nextTick(() => {
     asciiSketch = new p5(sketch)
@@ -95,21 +100,57 @@ onBeforeUnmount(() => {
     asciiSketch.remove()
   }
 })
+
+// Debounced redraw
+watch(brightnessThreshold, () => {
+  if (asciiSketch && mainImage) {
+    clearTimeout(redrawTimeout)
+    redrawTimeout = setTimeout(() => {
+      asciiSketch.redraw()
+    }, 150)
+  }
+})
 </script>
 
 <template>
-  <div>
+  <div class="wrapper">
     <h1>Ascii Generator Sketch</h1>
     <input type="file" accept="image/*" @change="onFileChange" />
+
+    <div class="slider-control">
+      <label for="brightness">Brightness Threshold: {{ brightnessThreshold }}</label>
+      <input
+        type="range"
+        id="brightness"
+        min="10"
+        max="255"
+        v-model="brightnessThreshold"
+      />
+    </div>
+
     <div ref="canvasContainer" class="canvas-container"></div>
   </div>
 </template>
 
 <style scoped>
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .canvas-container {
   margin-top: 20px;
   border: 1px solid #ccc;
   padding: 10px;
   background-color: #000;
+}
+
+.slider-control {
+  margin-top: 20px;
+  text-align: center;
+}
+input[type="range"] {
+  width: 300px;
 }
 </style>
