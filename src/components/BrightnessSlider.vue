@@ -1,31 +1,14 @@
 <script setup>
-import { defineProps, defineEmits, ref, watch } from 'vue'
+import { watch } from 'vue'
+const brightnessThreshold = defineModel()
 
-const props = defineProps({
-  modelValue: {
-    type: Number,
-    required: true
-  }
-})
-
-const emit = defineEmits(['update:modelValue'])
-
-const localValue = ref(props.modelValue)
-
-// Debounced emit on slider change
+// Debounce emit
 let debounceTimer = null
-watch(localValue, (newVal) => {
+watch(brightnessThreshold, (newVal) => {
   if (debounceTimer) clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => {
-    emit('update:modelValue', Number(newVal))
+    brightnessThreshold.value = Number(newVal)
   }, 150)
-})
-
-// Sync with external modelValue change
-watch(() => props.modelValue, (val) => {
-  if (val !== localValue.value) {
-    localValue.value = val
-  }
 })
 </script>
 
@@ -38,9 +21,9 @@ watch(() => props.modelValue, (val) => {
       type="range"
       min="10"
       max="255"
-      v-model="localValue"
+      v-model.number="brightnessThreshold"
     />
-    <div class="value">{{ localValue }}</div>
+    <div class="value">{{ brightnessThreshold }}</div>
   </div>
 </template>
 

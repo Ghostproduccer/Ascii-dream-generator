@@ -6,7 +6,6 @@ import ToolBox from './components/ToolBox.vue'
 const brightnessThreshold = ref(200)
 const invert = ref(false)
 
-// ✅ Watch for updates from ToolBox
 watch(brightnessThreshold, (newVal) => {
   console.log('Brightness threshold updated to:', newVal)
 })

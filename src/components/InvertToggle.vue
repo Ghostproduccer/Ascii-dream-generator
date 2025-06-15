@@ -1,24 +1,16 @@
+<!-- InvertToggle.vue -->
 <script setup>
-import { defineProps, defineEmits } from 'vue'
-
-const props = defineProps({
-  modelValue: {
-    type: Boolean,
-    required: true
-  }
-})
-
-const emit = defineEmits(['update:modelValue'])
+const model = defineModel()
 
 const toggle = () => {
-  emit('update:modelValue', !props.modelValue)
+  model.value = !model.value
 }
 </script>
 
 <template>
   <div class="invert-toggle">
     <label class="switch">
-      <input type="checkbox" :checked="modelValue" @change="toggle" />
+      <input type="checkbox" :checked="model" @change="toggle" />
       <span class="slider"></span>
     </label>
     <span class="label-text">Invert</span>
