@@ -5,7 +5,14 @@ import p5 from 'p5'
 const canvasContainer = ref(null)
 const CANVAS_SIZE = 700
 
-const brightnessThreshold = ref(155)
+// Props
+const props = defineProps({
+  brightnessThreshold: {
+    type: Number,
+    required: true
+  }
+})
+
 let asciiSketch = null
 let mainImage = null
 let redrawTimeout = null
@@ -59,7 +66,7 @@ const sketch = (p) => {
         const b = mainImage.pixels[idx + 2]
         const bright = (r + g + b) / 3
 
-        const maxThreshold = Number(brightnessThreshold.value) || 155
+        const maxThreshold = Number(props.brightnessThreshold) || 255
         const charIndex = Math.floor(p.map(bright, 0, maxThreshold, 0, charSet.length - 1))
         const c = charSet.charAt(Math.max(0, Math.min(charSet.length - 1, charIndex)))
 
@@ -102,7 +109,7 @@ onBeforeUnmount(() => {
 })
 
 // Debounced redraw
-watch(brightnessThreshold, () => {
+watch(() => props.brightnessThreshold, () => {
   if (asciiSketch && mainImage) {
     clearTimeout(redrawTimeout)
     redrawTimeout = setTimeout(() => {
@@ -114,21 +121,8 @@ watch(brightnessThreshold, () => {
 
 <template>
   <div class="wrapper">
-    <h1>Ascii Generator Sketch</h1>
-    <input type="file" accept="image/*" @change="onFileChange" />
-
-    <div class="slider-control">
-      <label for="brightness">Brightness Threshold: {{ brightnessThreshold }}</label>
-      <input
-        type="range"
-        id="brightness"
-        min="10"
-        max="255"
-        v-model="brightnessThreshold"
-      />
-    </div>
-
     <div ref="canvasContainer" class="canvas-container"></div>
+        <input type="file" accept="image/*" @change="onFileChange" />
   </div>
 </template>
 
@@ -140,8 +134,7 @@ watch(brightnessThreshold, () => {
 }
 
 .canvas-container {
-  margin-top: 20px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--color-primary);
   padding: 10px;
   background-color: #000;
 }
