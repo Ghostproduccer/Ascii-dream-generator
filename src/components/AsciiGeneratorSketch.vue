@@ -145,7 +145,10 @@ watch(() => props.invert, () => {
 <template>
   <div class="wrapper">
     <div ref="canvasContainer" class="canvas-container"></div>
-        <input type="file" accept="image/*" @change="onFileChange" />
+    <label for="file-upload" class="custom-file-upload">
+        Choose an image
+    </label>
+    <input id="file-upload" type="file" accept="image/*" @change="onFileChange" class="custom-input" />
   </div>
 </template>
 
@@ -154,19 +157,26 @@ watch(() => props.invert, () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 1rem;
 }
 
 .canvas-container {
-  border: 1px solid var(--color-primary);
+  border: 1px solid var(--color-muted);
   padding: 10px;
   background-color: #000;
 }
-
-.slider-control {
-  margin-top: 20px;
-  text-align: center;
+input[type="file"] {
+  display: none;
 }
-input[type="range"] {
-  width: 300px;
+.custom-file-upload {
+  border: 1px solid var(--color-primary);
+  display: inline-block;
+  padding: 0.4rem 1rem;
+  cursor: pointer;
+}
+.custom-file-upload:hover {
+  color: var(--color-background);
+  font-weight: bold;
+  background: var(--color-muted);
 }
 </style>
