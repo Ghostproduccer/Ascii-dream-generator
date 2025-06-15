@@ -13,7 +13,7 @@ watch(brightnessThreshold, (newVal) => {
 </script>
 
 <template>
-  <div>
+  <div class="container">
     <label for="brightness">Brightness Threshold</label>
     <input
       id="brightness"
@@ -28,17 +28,19 @@ watch(brightnessThreshold, (newVal) => {
 </template>
 
 <style scoped>
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
 .slider {
   width: 100%;
   height: 6px;
-  background: var(--color-secondary);
+   accent-color: var(--color-muted);
   border-radius: 3px;
   outline: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-.slider:hover {
-  background: #5a5a5a;
 }
 .value {
   text-align: right;
