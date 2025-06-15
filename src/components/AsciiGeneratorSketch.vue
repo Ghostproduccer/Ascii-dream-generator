@@ -10,6 +10,10 @@ const props = defineProps({
   brightnessThreshold: {
     type: Number,
     required: true
+  },
+  invert: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -67,7 +71,15 @@ const sketch = (p) => {
         const bright = (r + g + b) / 3
 
         const maxThreshold = Number(props.brightnessThreshold) || 255
-        const charIndex = Math.floor(p.map(bright, 0, maxThreshold, 0, charSet.length - 1))
+
+        const charIndex = Math.floor(p.map(
+          bright,
+          0,
+          maxThreshold,
+          props.invert ? charSet.length - 1 : 0,
+          props.invert ? 0 : charSet.length - 1
+       ))
+
         const c = charSet.charAt(Math.max(0, Math.min(charSet.length - 1, charIndex)))
 
         p.fill(255)
@@ -108,13 +120,24 @@ onBeforeUnmount(() => {
   }
 })
 
-// Debounced redraw
+// Debounced redraws
+const debounceTimeout = 150;
+
 watch(() => props.brightnessThreshold, () => {
   if (asciiSketch && mainImage) {
     clearTimeout(redrawTimeout)
     redrawTimeout = setTimeout(() => {
       asciiSketch.redraw()
-    }, 150)
+    }, debounceTimeout)
+  }
+})
+
+watch(() => props.invert, () => {
+  if (asciiSketch && mainImage) {
+    clearTimeout(redrawTimeout)
+    redrawTimeout = setTimeout(() => {
+      asciiSketch.redraw()
+    }, debounceTimeout)
   }
 })
 </script>

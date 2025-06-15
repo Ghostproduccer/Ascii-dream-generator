@@ -4,6 +4,7 @@ import AsciiGeneratorSketch from './components/AsciiGeneratorSketch.vue'
 import ToolBox from './components/ToolBox.vue'
 
 const brightnessThreshold = ref(200)
+const invert = ref(false)
 
 // ✅ Watch for updates from ToolBox
 watch(brightnessThreshold, (newVal) => {
@@ -14,10 +15,16 @@ watch(brightnessThreshold, (newVal) => {
 <template>
   <main class="layout">
     <div class="canvas">
-      <AsciiGeneratorSketch :brightness-threshold="brightnessThreshold" />
+      <AsciiGeneratorSketch 
+        :brightness-threshold="brightnessThreshold"
+        :invert="invert" 
+      />
     </div>
     <div class="toolbox">
-      <ToolBox v-model:brightness-threshold="brightnessThreshold" />
+      <ToolBox 
+        v-model:brightness-threshold="brightnessThreshold"
+        v-model:invert="invert" 
+      />
     </div>
   </main>
 </template>
