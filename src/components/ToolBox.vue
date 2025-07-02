@@ -21,7 +21,8 @@ const charSize = defineModel('charSize')
       v-model="charSize"
       :minValue="6"
       :maxValue="20"
-      placeholder="Char Size"/>
+      placeholder="Definition"
+      inverted="true"/>
 
     <InvertToggle v-model="invert" />
   </div>
