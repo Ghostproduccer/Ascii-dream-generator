@@ -4,16 +4,25 @@ import SliderComponent from './SliderComponent.vue'
 
 const brightnessThreshold = defineModel('brightnessThreshold')
 const invert = defineModel('invert')
+const charSize = defineModel('charSize')
 </script>
 
 <template>
   <div class="toolbox">
     <h2>Toolbox</h2>
+    
     <SliderComponent
       v-model="brightnessThreshold"
       :minValue="10"
       :maxValue="255"
       placeholder="Brightness Threshold"/>
+    
+      <SliderComponent
+      v-model="charSize"
+      :minValue="6"
+      :maxValue="20"
+      placeholder="Char Size"/>
+
     <InvertToggle v-model="invert" />
   </div>
 </template>

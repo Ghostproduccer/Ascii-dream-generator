@@ -5,6 +5,7 @@ import ToolBox from '../components/ToolBox.vue'
 
 const brightnessThreshold = ref(200)
 const invert = ref(false)
+const charSize = ref(8)
 
 watch(brightnessThreshold, (newVal) => {
   console.log('Brightness threshold updated to:', newVal)
@@ -16,13 +17,15 @@ watch(brightnessThreshold, (newVal) => {
     <div class="canvas">
       <AsciiGeneratorSketch 
         :brightness-threshold="brightnessThreshold"
-        :invert="invert" 
+        :invert="invert"
+        :char-size="charSize" 
       />
     </div>
     <div class="toolbox">
       <ToolBox 
         v-model:brightness-threshold="brightnessThreshold"
-        v-model:invert="invert" 
+        v-model:invert="invert"
+        v-model:char-size="charSize" 
       />
     </div>
   </main>

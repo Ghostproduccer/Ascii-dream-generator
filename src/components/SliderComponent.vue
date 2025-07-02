@@ -1,5 +1,5 @@
 <script setup>
-import { watch } from 'vue'
+import { watch, ref } from 'vue'
 
 const props = defineProps({
   minValue: {
@@ -15,15 +15,19 @@ const props = defineProps({
     required: true,
   },
 })
-const sliderValue = defineModel()
+const modelValue = defineModel()
+const localValue = ref(modelValue.value)
 
-// Debounce emit
+watch(modelValue, (newVal) => {
+  if (newVal !== localValue.value) localValue.value = newVal
+})
+
 let debounceTimer = null
-watch(sliderValue, (newVal) => {
+watch(localValue, (newVal) => {
   if (debounceTimer) clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => {
-    sliderValue.value = Number(newVal)
-  }, 150)
+    modelValue.value = Number(newVal)
+  }, 100)
 })
 </script>
 
@@ -36,9 +40,9 @@ watch(sliderValue, (newVal) => {
       type="range"
       :min="props.minValue"
       :max="props.maxValue"
-      v-model.number="sliderValue"
+      v-model.number="localValue"
     />
-    <div class="value">{{ sliderValue }}</div>
+    <div class="value">{{ localValue }}</div>
   </div>
 </template>
 

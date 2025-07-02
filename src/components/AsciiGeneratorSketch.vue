@@ -14,6 +14,10 @@ const props = defineProps({
   invert: {
     type: Boolean,
     default: false
+  },
+  charSize: {
+    type: Number,
+    default: 10
   }
 })
 
@@ -23,8 +27,7 @@ let redrawTimeout = null
 
 const sketch = (p) => {
   const charSet = "@%#*+=-:. "
-  const cols = 120
-  let rows, tileW, tileH
+  let cols, rows, tileW, tileH
   let font = null
 
   p.setup = async () => {
@@ -43,7 +46,7 @@ const sketch = (p) => {
     }
 
     p.textAlign(p.CENTER, p.CENTER)
-    p.textSize(8)
+    //p.textSize(props.charSize)
     p.noLoop()
     p.background(0)
   }
@@ -53,10 +56,14 @@ const sketch = (p) => {
 
     p.background(0)
 
-    tileW = p.width / cols
-    tileH = tileW
+   // Calculate columns and rows based on charSize
+    tileW = props.charSize
+    tileH = props.charSize
+    cols = Math.floor(p.width / tileW)
     rows = Math.floor(p.height / tileH)
 
+    // Update text size dynamically
+    p.textSize(props.charSize)
     mainImage.loadPixels()
 
     for (let y = 0; y < rows; y++) {
@@ -120,24 +127,22 @@ onBeforeUnmount(() => {
   }
 })
 
-// Debounced redraws
-const debounceTimeout = 150;
-
+// Watchers
 watch(() => props.brightnessThreshold, () => {
   if (asciiSketch && mainImage) {
-    clearTimeout(redrawTimeout)
-    redrawTimeout = setTimeout(() => {
-      asciiSketch.redraw()
-    }, debounceTimeout)
+    asciiSketch.redraw()
   }
 })
 
 watch(() => props.invert, () => {
   if (asciiSketch && mainImage) {
-    clearTimeout(redrawTimeout)
-    redrawTimeout = setTimeout(() => {
-      asciiSketch.redraw()
-    }, debounceTimeout)
+    asciiSketch.redraw()
+  }
+})
+
+watch(() => props.charSize, () => {
+  if (asciiSketch && mainImage) {
+    asciiSketch.redraw()
   }
 })
 </script>
