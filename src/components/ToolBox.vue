@@ -1,6 +1,6 @@
 <script setup>
-import BrightnessSlider from './BrightnessSlider.vue'
 import InvertToggle from './InvertToggle.vue'
+import SliderComponent from './SliderComponent.vue'
 
 const brightnessThreshold = defineModel('brightnessThreshold')
 const invert = defineModel('invert')
@@ -9,7 +9,11 @@ const invert = defineModel('invert')
 <template>
   <div class="toolbox">
     <h2>Toolbox</h2>
-    <BrightnessSlider v-model="brightnessThreshold" />
+    <SliderComponent
+      v-model="brightnessThreshold"
+      :minValue="10"
+      :maxValue="255"
+      placeholder="Brightness Threshold"/>
     <InvertToggle v-model="invert" />
   </div>
 </template>

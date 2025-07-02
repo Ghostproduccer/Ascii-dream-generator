@@ -1,29 +1,44 @@
 <script setup>
 import { watch } from 'vue'
-const brightnessThreshold = defineModel()
+
+const props = defineProps({
+  minValue: {
+    type: Number,
+    required: true,
+  },
+  maxValue: {
+    type: Number,
+    required: true,
+  },
+  placeholder: {
+    type: String,
+    required: true,
+  },
+})
+const sliderValue = defineModel()
 
 // Debounce emit
 let debounceTimer = null
-watch(brightnessThreshold, (newVal) => {
+watch(sliderValue, (newVal) => {
   if (debounceTimer) clearTimeout(debounceTimer)
   debounceTimer = setTimeout(() => {
-    brightnessThreshold.value = Number(newVal)
+    sliderValue.value = Number(newVal)
   }, 150)
 })
 </script>
 
 <template>
   <div class="container">
-    <label for="brightness">Brightness Threshold</label>
+    <label for="title">{{ props.placeholder }}</label>
     <input
       id="brightness"
       class="slider"
       type="range"
-      min="10"
-      max="255"
-      v-model.number="brightnessThreshold"
+      :min="props.minValue"
+      :max="props.maxValue"
+      v-model.number="sliderValue"
     />
-    <div class="value">{{ brightnessThreshold }}</div>
+    <div class="value">{{ sliderValue }}</div>
   </div>
 </template>
 
