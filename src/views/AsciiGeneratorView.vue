@@ -47,6 +47,6 @@ watch(brightnessThreshold, (newVal) => {
 }
 
 .toolbox {
-  width: 300px;
+  width: 20rem;
 }
 </style>

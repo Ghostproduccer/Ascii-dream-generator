@@ -23,7 +23,6 @@ const props = defineProps({
 
 let asciiSketch = null
 let mainImage = null
-let redrawTimeout = null
 
 const sketch = (p) => {
   const charSet = "@%#*+=-:. "
@@ -167,7 +166,7 @@ watch(() => props.charSize, () => {
 
 .canvas-container {
   border: 1px solid var(--color-muted);
-  padding: 10px;
+  padding: 0.5rem;
   background-color: #000;
 }
 input[type="file"] {
