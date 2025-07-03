@@ -1,7 +1,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import AsciiGeneratorSketch from '../components/AsciiGeneratorSketch.vue'
-import ToolBox from '../components/ToolBox.vue'
+import ToolBox from '../components/Toolbox/ToolBox.vue'
 
 const brightnessThreshold = ref(200)
 const invert = ref(false)
