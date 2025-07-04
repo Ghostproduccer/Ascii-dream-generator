@@ -5,17 +5,31 @@ const charSet = defineModel()
 
 // Example charset options
 const charsetOptions = [
-  { name: 'Standard', value: '@%#*+=-:. ' },
+  { name: 'Ascii Dreams', value: '@%#*+=-:. ' },
   { name: 'Blocks', value: '█▓▒░▚▞▖ ' },
-  { name: 'Extended', value: '█▓▒░▚▞▖▗▘▙▛▜▝▟ ' },
-  { name: 'Symbols', value: '☀☁☂☃☄★☆☎✈✉✌ ' },
-  { name: 'Emoji', value: '😀😃😄😁😆😅😂🤣😊😇🙂🙃😉' },
-  { name: 'Punctuation', value: '!@#$%^&*()_+-=[]{}|;:\'",.<>/? ' },
+  { name: 'Blocks Extended', value: '█▓▒░▚▞▖▗▘▙▛▜▝▟ ' },
+  { name: 'Symbol', value: '☀☁☂☃☄★☆☎✈✉✌ ' },
+  { name: '1993', value: '!@#$%^&*()_+-=[]{}|;:\'",.<>/? ' },
   { name: 'Numbers', value: '9876543210 ' },
   { name: 'Letters', value: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ ' },
-  { name: 'Custom', value: '' }
 ]
+const submited = ref(false)
 
+const onMounted = () => {
+  if (charSet.value === undefined || charSet.value === '') {
+    charSet.value = charsetOptions[0].value
+  }
+  submited.value = false
+}
+
+const handleSubmitCustomCharSet = () => {
+  if (charSet.value.trim() === '') {
+    alert('Please enter a valid custom charset.')
+    return
+  }
+  charSet.value = charSet.value.trim()
+  submited.value = true
+}
 // Handle select change
 function onSelect(e) {
   charSet.value = e.target.value
@@ -34,13 +48,6 @@ function onSelect(e) {
         {{ option.name }}
       </option>
     </select>
-    <div v-if="charSet === ''" style="margin-top: 0.5em;">
-      <input
-        type="text"
-        placeholder="Enter custom charset"
-        v-model="charSet"
-      />
-    </div>
   </div>
 </template>
 
