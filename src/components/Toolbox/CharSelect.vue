@@ -1,4 +1,5 @@
 <script setup>
+import Dropdown from './Dropdown.vue'
 const charSet = defineModel()
 
 const charsetOptions = [
@@ -19,15 +20,7 @@ const onSelect = (e) => {
 <template>
   <div class="char-select">
     <label for="charset-select">Select a CharSet</label>
-    <select id="charset-select" @change="onSelect" :value="charSet">
-      <option
-        v-for="option in charsetOptions"
-        :key="option.name"
-        :value="option.value"
-      >
-        {{ option.name }}
-      </option>
-    </select>
+    <Dropdown v-model="charSet" :options="charsetOptions" />
   </div>
 </template>
 
@@ -36,5 +29,29 @@ const onSelect = (e) => {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+label {
+  font-weight: 500;
+}
+
+select {
+  appearance: none;       /* Removes default arrow in most browsers */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none;    /* For Firefox */
+  border: 1px solid var(--color-muted);
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-size: 14px;
+  transition: border-color 0.2s;
+  background-image: none; /* Removes any fallback arrow */
+}
+
+select:focus {
+  outline: none;
+  border-color: #666;
 }
 </style>
+
