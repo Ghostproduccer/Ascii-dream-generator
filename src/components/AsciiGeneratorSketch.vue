@@ -18,6 +18,10 @@ const props = defineProps({
   charSize: {
     type: Number,
     default: 10
+  },
+  charSet: {
+    type: String,
+    default: '@%#*+=-:. '
   }
 })
 
@@ -25,7 +29,6 @@ let asciiSketch = null
 let mainImage = null
 
 const sketch = (p) => {
-  const charSet = "@%#*+=-:. "
   let cols, rows, tileW, tileH
   let font = null
 
@@ -54,6 +57,7 @@ const sketch = (p) => {
     if (!mainImage || !mainImage.pixels) return
 
     p.background(0)
+    const charSet = props.charSet
 
    // Calculate columns and rows based on charSize
     tileW = props.charSize
@@ -140,6 +144,12 @@ watch(() => props.invert, () => {
 })
 
 watch(() => props.charSize, () => {
+  if (asciiSketch && mainImage) {
+    asciiSketch.redraw()
+  }
+})
+
+watch(() => props.charSet, () => {
   if (asciiSketch && mainImage) {
     asciiSketch.redraw()
   }

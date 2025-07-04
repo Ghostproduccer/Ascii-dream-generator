@@ -1,10 +1,12 @@
 <script setup>
 import InvertToggle from './InvertToggle.vue'
 import SliderComponent from './SliderComponent.vue'
+import CharSelect from './CharSelect.vue'
 
 const brightnessThreshold = defineModel('brightnessThreshold')
 const invert = defineModel('invert')
 const charSize = defineModel('charSize')
+const charSet = defineModel('charSet')
 </script>
 
 <template>
@@ -24,7 +26,11 @@ const charSize = defineModel('charSize')
       placeholder="Definition"
       inverted="true"/>
 
+    <CharSelect 
+    v-model="charSet"/>
+
     <InvertToggle v-model="invert" />
+    
   </div>
 </template>
 
