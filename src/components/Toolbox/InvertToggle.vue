@@ -1,4 +1,3 @@
-<!-- InvertToggle.vue -->
 <script setup>
 const model = defineModel()
 
@@ -19,6 +18,7 @@ const toggle = () => {
 
 <style scoped>
 .invert-toggle {
+  margin-top: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;

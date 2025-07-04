@@ -100,7 +100,6 @@ function onFileChange(event) {
   reader.readAsDataURL(file)
 }
 
-// Setup & Cleanup
 onMounted(() => {
   nextTick(() => {
     asciiSketch = new p5(sketch)
