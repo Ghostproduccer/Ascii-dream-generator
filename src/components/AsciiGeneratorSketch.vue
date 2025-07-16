@@ -110,7 +110,6 @@ const sketch = (p) => {
     
     svgLines.push(`</svg>`)
     asciiSvg.value = svgLines.join('\n')
-    console.log(asciiSvg.value)
     
     asciiText.value = asciiLines.join('\n')
     console.log(asciiText.value)
