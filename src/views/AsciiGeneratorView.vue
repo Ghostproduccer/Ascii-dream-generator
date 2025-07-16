@@ -1,12 +1,10 @@
 <script setup>
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import AsciiGeneratorSketch from '../components/AsciiGeneratorSketch.vue'
 import ToolBox from '../components/Toolbox/ToolBox.vue'
 
-const brightnessThreshold = ref(200)
-const invert = ref(false)
-const charSize = ref(8)
-const charSet = ref("@%#*+=-:. ")
+const toolBoxRef = ref(null)
+const sketchRef = ref(null)
 
 </script>
 
@@ -14,18 +12,17 @@ const charSet = ref("@%#*+=-:. ")
   <main class="layout">
     <div class="canvas">
       <AsciiGeneratorSketch 
-        :brightness-threshold="brightnessThreshold"
-        :invert="invert"
-        :char-size="charSize"
-        :char-set="charSet" 
+        ref="sketchRef"
+        :brightness-threshold="toolBoxRef?.brightnessThreshold"
+        :invert="toolBoxRef?.invert"
+        :char-size="toolBoxRef?.charSize"
+        :char-set="toolBoxRef?.charSet" 
       />
     </div>
     <div class="toolbox">
       <ToolBox 
-        v-model:brightness-threshold="brightnessThreshold"
-        v-model:invert="invert"
-        v-model:char-size="charSize" 
-        v-model:char-set="charSet"
+        ref="toolBoxRef"
+        :ascii-svg="sketchRef?.asciiSvg"
       />
     </div>
   </main>

@@ -4,7 +4,8 @@ import p5 from 'p5'
 
 const canvasContainer = ref(null)
 const CANVAS_SIZE = 700
-
+const asciiSvg = ref(null)
+const asciiText = ref(null)
 // Props
 const props = defineProps({
   brightnessThreshold: { type: Number, required: true },
@@ -12,6 +13,10 @@ const props = defineProps({
   charSize: { type: Number, default: 10 },
   charSet: { type: String, default: '@%#*+=-:. ' }
 })
+defineExpose({
+  asciiSvg
+})
+
 
 let asciiSketch = null
 let mainImage = null
@@ -45,14 +50,31 @@ const sketch = (p) => {
     cols = Math.floor(p.width / tileW)
     rows = Math.floor(p.height / tileH)
 
+    const svgLines = []
+
+    svgLines.push(
+    `<svg xmlns="http://www.w3.org/2000/svg" 
+      style="background-color: black;"
+      width="${p.width}" 
+      height="${p.height}" 
+      font-family="Source Code Pro" 
+      font-weight="regular" 
+      font-size="${props.charSize}px" 
+      fill="white" 
+      text-anchor="middle" 
+      dominant-baseline="middle">`
+    )
+
     p.background(0)
     p.textSize(props.charSize)
     const charSet = props.charSet
     const maxThreshold = Number(props.brightnessThreshold) || 255
 
     mainImage.loadPixels()
+    let asciiLines = []
 
     for (let y = 0; y < rows; y++) {
+      let line = ""
       for (let x = 0; x < cols; x++) {
         const px = Math.floor((x * mainImage.width) / cols)
         const py = Math.floor((y * mainImage.height) / rows)
@@ -73,10 +95,25 @@ const sketch = (p) => {
 
         const c = charSet.charAt(Math.max(0, Math.min(charSet.length - 1, index)))
 
+        line += c
+
+        const xPos = x * tileW + tileW / 2
+        const yPos = y * tileH + tileH / 2
+        
+        svgLines.push(`<text x="${xPos}" y="${yPos}" dy="0.5em">${c}</text>`)
+
         p.fill(255)
-        p.text(c, x * tileW + tileW / 2, y * tileH + tileH / 2)
+        p.text(c, xPos, yPos)
       }
+      asciiLines.push(line)
     }
+    
+    svgLines.push(`</svg>`)
+    asciiSvg.value = svgLines.join('\n')
+    console.log(asciiSvg.value)
+    
+    asciiText.value = asciiLines.join('\n')
+    console.log(asciiText.value)
   }
 
   p.draw = renderASCII

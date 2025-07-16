@@ -3,11 +3,36 @@ import InvertToggle from './InvertToggle.vue'
 import SliderComponent from './SliderComponent.vue'
 import CharSelect from './CharSelect.vue'
 import asciiDreams from '@/assets/images/asciiDreams.svg'
+import { ref } from 'vue'
 
-const brightnessThreshold = defineModel('brightnessThreshold')
-const invert = defineModel('invert')
-const charSize = defineModel('charSize')
-const charSet = defineModel('charSet')
+const brightnessThreshold = ref(200)
+const invert = ref(false)
+const charSize = ref(8)
+const charSet = ref("@%#*+=-:. ")
+
+defineExpose({
+  brightnessThreshold,
+  invert,
+  charSize,
+  charSet
+})
+
+const props = defineProps({
+  asciiSvg: {
+    type: String,
+    default: ''
+  }
+})
+
+function downloadSVG() {
+  const blob = new Blob([props.asciiSvg], { type: 'image/svg+xml' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = 'ascii-dream.svg'
+  a.click()
+  URL.revokeObjectURL(url)
+}
 </script>
 
 <template>
@@ -20,7 +45,7 @@ const charSet = defineModel('charSet')
       v-model="brightnessThreshold"
       :minValue="10"
       :maxValue="255"
-      placeholder="Brightness Threshold"
+      placeholder="Threshold"
     />
 
     <SliderComponent
@@ -33,6 +58,9 @@ const charSet = defineModel('charSet')
 
     <CharSelect v-model="charSet" />
     <InvertToggle v-model="invert" />
+     <div>
+    <button @click="downloadSVG()">Download</button>
+  </div>
   </div>
 </template>
 
