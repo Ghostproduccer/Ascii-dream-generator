@@ -1,7 +1,7 @@
 <script setup>
-import AsciiGeneratorView from './views/AsciiGeneratorView.vue'
+import LandingView from "./views/LandingView.vue";
 </script>
 
 <template>
-  <AsciiGeneratorView />
+  <LandingView />
 </template>
