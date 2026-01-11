@@ -28,6 +28,10 @@ const frames = [
 █░░█ █░░░▀█▀░░░█ █░░█
  ▀▀  ▀▄░░░░░░░▄▀   ▀▀`,
 ];
+
+const handleClickUpload = () => {
+  console.log("Button clicked!");
+};
 </script>
 
 <template>
@@ -38,11 +42,7 @@ const frames = [
 
     <p>⊹₊˚‧ Drop or upload your image! ‧˚₊⊹</p>
 
-    <ButtonComponent
-      variant="primary"
-      size="md"
-      @click="() => alert('Button clicked!')"
-    >
+    <ButtonComponent variant="primary" size="md" @click="handleClickUpload">
       Upload
     </ButtonComponent>
   </div>
