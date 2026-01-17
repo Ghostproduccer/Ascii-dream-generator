@@ -1,7 +1,5 @@
-<script setup>
-import AsciiGeneratorView from './views/AsciiGeneratorView.vue'
-</script>
+<script setup></script>
 
 <template>
-  <AsciiGeneratorView />
+  <router-view />
 </template>

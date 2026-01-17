@@ -8,6 +8,7 @@ const asciiSvg = ref(null);
 const asciiText = ref(null);
 // Props
 const props = defineProps({
+  image: { type: String, default: null },
   brightnessThreshold: { type: Number, required: true },
   invert: { type: Boolean, default: false },
   charSize: { type: Number, default: 10 },
@@ -50,7 +51,7 @@ const sketch = (p) => {
 
     try {
       font = await p.loadFont(
-        "https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf"
+        "https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf",
       );
       p.textFont(font);
     } catch (e) {
@@ -63,7 +64,7 @@ const sketch = (p) => {
   };
 
   const renderASCII = () => {
-    if (!mainImage) return;
+    if (!props.image || !mainImage) return;
 
     tileW = props.charSize;
     tileH = props.charSize;
@@ -111,12 +112,12 @@ const sketch = (p) => {
             0,
             maxThreshold,
             props.invert ? charSet.length - 1 : 0,
-            props.invert ? 0 : charSet.length - 1
-          )
+            props.invert ? 0 : charSet.length - 1,
+          ),
         );
 
         const c = charSet.charAt(
-          Math.max(0, Math.min(charSet.length - 1, index))
+          Math.max(0, Math.min(charSet.length - 1, index)),
         );
 
         line += c;
@@ -167,6 +168,14 @@ function onFileChange(event) {
 onMounted(() => {
   nextTick(() => {
     asciiSketch = new p5(sketch);
+
+    if (props.image) {
+      asciiSketch.loadImage(props.image, (img) => {
+        mainImage = img;
+        mainImage.resize(CANVAS_SIZE, CANVAS_SIZE);
+        asciiSketch.redraw();
+      });
+    }
   });
 });
 
