@@ -2,6 +2,7 @@
 import AsciiAnimationComponent from "@/components/AsciiAnimationComponent.vue";
 import AsciiBackground from "@/components/AsciiBackground.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
+import { useRouter } from "vue-router";
 
 const frames = [
   `   ▄▀▀▀▄▄▄▄▄▄▄▀▀▀▄
@@ -29,8 +30,10 @@ const frames = [
  ▀▀  ▀▄░░░░░░░▄▀   ▀▀`,
 ];
 
+const router = useRouter();
+
 const handleClickUpload = () => {
-  console.log("Button clicked!");
+  router.push("/generate");
 };
 </script>
 
