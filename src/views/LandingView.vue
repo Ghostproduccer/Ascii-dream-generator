@@ -3,6 +3,8 @@ import AsciiAnimationComponent from "@/components/AsciiAnimationComponent.vue";
 import AsciiBackground from "@/components/AsciiBackground.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import { useRouter } from "vue-router";
+import { useImageStore } from "@/composables/useImageStore.js";
+import { ref } from "vue";
 
 const frames = [
   `   ▄▀▀▀▄▄▄▄▄▄▄▀▀▀▄
@@ -31,9 +33,24 @@ const frames = [
 ];
 
 const router = useRouter();
+const { setImage } = useImageStore();
+
+const fileInput = ref(null);
 
 const handleClickUpload = () => {
-  router.push("/generate");
+  fileInput.value?.click();
+};
+
+const handleFileSelect = (event) => {
+  const file = event.target.files?.[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImage(e.target.result);
+      router.push("/generate");
+    };
+    reader.readAsDataURL(file);
+  }
 };
 </script>
 
@@ -48,6 +65,12 @@ const handleClickUpload = () => {
     <ButtonComponent variant="primary" size="md" @click="handleClickUpload">
       Upload
     </ButtonComponent>
+    <input
+      ref="fileInput"
+      type="file"
+      accept="image/*"
+      @change="handleFileSelect"
+    />
   </div>
 </template>
 
@@ -62,5 +85,8 @@ p {
   margin: 0.25rem 0.5rem 1rem 0.5rem;
   font-size: 1rem;
   color: var(--color-primary);
+}
+input[type="file"] {
+  display: none;
 }
 </style>

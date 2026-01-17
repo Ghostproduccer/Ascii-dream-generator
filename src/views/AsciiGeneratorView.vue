@@ -1,29 +1,34 @@
 <script setup>
-import { ref } from 'vue'
-import AsciiGeneratorSketch from '../components/AsciiGeneratorSketch.vue'
-import ToolBox from '../components/Toolbox/ToolBox.vue'
+import { onMounted, ref } from "vue";
+import AsciiGeneratorSketch from "../components/AsciiGeneratorSketch.vue";
+import ToolBox from "../components/Toolbox/ToolBox.vue";
+import { useImageStore } from "@/composables/useImageStore";
 
-const toolBoxRef = ref(null)
-const sketchRef = ref(null)
+const toolBoxRef = ref(null);
+const sketchRef = ref(null);
+const { uploadedImage } = useImageStore();
 
+onMounted(() => {
+  if (!uploadedImage.value) {
+    window.location.href = "/";
+  }
+});
 </script>
 
 <template>
   <main class="layout">
     <div class="canvas">
-      <AsciiGeneratorSketch 
+      <AsciiGeneratorSketch
         ref="sketchRef"
+        :image="uploadedImage"
         :brightness-threshold="toolBoxRef?.brightnessThreshold"
         :invert="toolBoxRef?.invert"
         :char-size="toolBoxRef?.charSize"
-        :char-set="toolBoxRef?.charSet" 
+        :char-set="toolBoxRef?.charSet"
       />
     </div>
     <div class="toolbox">
-      <ToolBox 
-        ref="toolBoxRef"
-        :ascii-svg="sketchRef?.asciiSvg"
-      />
+      <ToolBox ref="toolBoxRef" :ascii-svg="sketchRef?.asciiSvg" />
     </div>
   </main>
 </template>
