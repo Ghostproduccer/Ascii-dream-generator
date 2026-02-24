@@ -6,6 +6,7 @@ const canvasContainer = ref(null);
 const CANVAS_SIZE = 700;
 const asciiSvg = ref(null);
 const asciiText = ref(null);
+
 // Props
 const props = defineProps({
   image: { type: String, default: null },

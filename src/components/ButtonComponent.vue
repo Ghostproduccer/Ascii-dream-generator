@@ -65,7 +65,6 @@ function onKeydown(e) {
   outline-offset: 2px;
 }
 
-/* Variants */
 .btn--primary {
   background: var(--color-muted);
   color: var(--color-background);
@@ -89,7 +88,6 @@ function onKeydown(e) {
   border: solid 1px;
 }
 
-/* Sizes */
 .btn--sm {
   padding: 0.25rem 0.5rem;
   font-size: 0.85rem;
@@ -103,7 +101,6 @@ function onKeydown(e) {
   font-size: 1.125rem;
 }
 
-/* Disabled */
 .btn--disabled,
 .btn:disabled {
   opacity: 0.5;
