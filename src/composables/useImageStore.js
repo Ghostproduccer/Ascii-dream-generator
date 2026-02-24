@@ -1,11 +1,21 @@
-import { ref } from "vue";
+import { ref, reactive, toRefs } from "vue";
 
-const uploadedImage = ref(null)
+// Shared state object (acting as a simple store)
+const state = reactive({
+  uploadedImage: null,
+  brightnessThreshold: 200,
+  invert: false,
+  charSize: 10,
+  charSet: "@%#*+=-:. "
+})
 
 export function useImageStore() {
   const setImage = (imageData) => {
-    uploadedImage.value = imageData
+    state.uploadedImage = imageData
   }
-  
-  return { uploadedImage, setImage }
+
+  return {
+    ...toRefs(state),
+    setImage
+  }
 }

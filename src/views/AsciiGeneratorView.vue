@@ -1,16 +1,17 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import { useRouter } from "vue-router";
 import AsciiGeneratorSketch from "../components/AsciiGeneratorSketch.vue";
 import ToolBox from "../components/Toolbox/ToolBox.vue";
 import { useImageStore } from "@/composables/useImageStore";
 
-const toolBoxRef = ref(null);
+const router = useRouter();
 const sketchRef = ref(null);
-const { uploadedImage } = useImageStore();
+const { uploadedImage, brightnessThreshold, invert, charSize, charSet } = useImageStore();
 
 onMounted(() => {
   if (!uploadedImage.value) {
-    window.location.href = "/";
+    router.push("/");
   }
 });
 </script>
@@ -21,17 +22,18 @@ onMounted(() => {
       <AsciiGeneratorSketch
         ref="sketchRef"
         :image="uploadedImage"
-        :brightness-threshold="toolBoxRef?.brightnessThreshold"
-        :invert="toolBoxRef?.invert"
-        :char-size="toolBoxRef?.charSize"
-        :char-set="toolBoxRef?.charSet"
+        :brightness-threshold="brightnessThreshold"
+        :invert="invert"
+        :char-size="charSize"
+        :char-set="charSet"
       />
     </div>
     <div class="toolbox">
-      <ToolBox ref="toolBoxRef" :ascii-svg="sketchRef?.asciiSvg" />
+      <ToolBox :ascii-svg="sketchRef?.asciiSvg" />
     </div>
   </main>
 </template>
+
 
 <style scoped>
 .layout {

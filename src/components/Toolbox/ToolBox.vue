@@ -3,19 +3,9 @@ import InvertToggle from './InvertToggle.vue'
 import SliderComponent from './SliderComponent.vue'
 import CharSelect from './CharSelect.vue'
 import asciiDreams from '@/assets/images/asciiDreams.svg'
-import { ref } from 'vue'
+import { useImageStore } from '@/composables/useImageStore'
 
-const brightnessThreshold = ref(200)
-const invert = ref(false)
-const charSize = ref(8)
-const charSet = ref("@%#*+=-:. ")
-
-defineExpose({
-  brightnessThreshold,
-  invert,
-  charSize,
-  charSet
-})
+const { brightnessThreshold, invert, charSize, charSet } = useImageStore()
 
 const props = defineProps({
   asciiSvg: {
@@ -25,6 +15,7 @@ const props = defineProps({
 })
 
 function downloadSVG() {
+  if (!props.asciiSvg) return
   const blob = new Blob([props.asciiSvg], { type: 'image/svg+xml' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
@@ -58,9 +49,9 @@ function downloadSVG() {
 
     <CharSelect v-model="charSet" />
     <InvertToggle v-model="invert" />
-     <div>
-    <button @click="downloadSVG()">Download</button>
-  </div>
+    <div>
+      <button @click="downloadSVG()" :disabled="!props.asciiSvg">Download</button>
+    </div>
   </div>
 </template>
 
@@ -71,7 +62,6 @@ function downloadSVG() {
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  height: 50%;
   margin-bottom: 1.5rem;
 }
 
@@ -89,6 +79,11 @@ function downloadSVG() {
   padding: 2rem;
   border: 1px solid var(--color-muted);
   background-color: var(--color-background);
-  width: 35rem;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>
+
