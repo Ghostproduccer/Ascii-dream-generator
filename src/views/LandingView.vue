@@ -3,7 +3,7 @@ import AsciiAnimationComponent from "@/components/AsciiAnimationComponent.vue";
 import AsciiBackground from "@/components/AsciiBackground.vue";
 import ButtonComponent from "@/components/ButtonComponent.vue";
 import { useRouter } from "vue-router";
-import { useImageStore } from "@/composables/useImageStore.js";
+import { useImageStore } from "@/stores/imageStore.js";
 import { ref } from "vue";
 
 const frames = [

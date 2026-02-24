@@ -3,11 +3,13 @@ import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import AsciiGeneratorSketch from "../components/AsciiGeneratorSketch.vue";
 import ToolBox from "../components/Toolbox/ToolBox.vue";
-import { useImageStore } from "@/composables/useImageStore";
+import { useImageStore } from "@/stores/imageStore";
+import { storeToRefs } from "pinia";
 
 const router = useRouter();
 const sketchRef = ref(null);
-const { uploadedImage, brightnessThreshold, invert, charSize, charSet } = useImageStore();
+const store = useImageStore();
+const { uploadedImage, brightnessThreshold, invert, charSize, charSet } = storeToRefs(store);
 
 onMounted(() => {
   if (!uploadedImage.value) {

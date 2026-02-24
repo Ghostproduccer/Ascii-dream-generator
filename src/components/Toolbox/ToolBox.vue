@@ -3,9 +3,11 @@ import InvertToggle from './InvertToggle.vue'
 import SliderComponent from './SliderComponent.vue'
 import CharSelect from './CharSelect.vue'
 import asciiDreams from '@/assets/images/asciiDreams.svg'
-import { useImageStore } from '@/composables/useImageStore'
+import { useImageStore } from '@/stores/imageStore'
+import { storeToRefs } from 'pinia'
 
-const { brightnessThreshold, invert, charSize, charSet } = useImageStore()
+const store = useImageStore()
+const { brightnessThreshold, invert, charSize, charSet } = storeToRefs(store)
 
 const props = defineProps({
   asciiSvg: {
