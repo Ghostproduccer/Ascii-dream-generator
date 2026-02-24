@@ -1,46 +1,32 @@
 <script setup>
-import { watch, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps({
-  minValue: {
-    type: Number,
-    required: true,
-  },
-  maxValue: {
-    type: Number,
-    required: true,
-  },
-  placeholder: {
-    type: String,
-    required: true,
-  },
-  inverted: { 
-    type: Boolean, 
-    default: false }
+  minValue: { type: Number, required: true },
+  maxValue: { type: Number, required: true },
+  placeholder: { type: String, required: true },
+  inverted: { type: Boolean, default: false }
 })
-const modelValue = defineModel()
-const localValue = props.inverted ? ref(props.maxValue -(modelValue.value - props.minValue)) : ref(modelValue.value)
 
-watch(modelValue, (newVal) => {
-  if (!props.inverted) {
-    if (newVal !== localValue.value) localValue.value = newVal
-  } else {
-    if (newVal !== localValue.value) localValue.value = props.maxValue - (newVal - props.minValue)
+const modelValue = defineModel()
+
+// Internal value for immediate slider feedback
+const displayValue = computed({
+  get: () => {
+    if (!props.inverted) return modelValue.value
+    return props.maxValue - (modelValue.value - props.minValue)
+  },
+  set: (val) => {
+    let targetValue = Number(val)
+    if (props.inverted) {
+      targetValue = props.maxValue - (targetValue - props.minValue)
+    }
+    modelValue.value = targetValue
   }
 })
 
-let debounceTimer = null
-watch(localValue, (newVal) => {
-  if (debounceTimer) clearTimeout(debounceTimer)
-  debounceTimer = setTimeout(() => {
-    if (!props.inverted) {
-      modelValue.value = Number(newVal)
-    } else {
-      modelValue.value = props.maxValue - (Number(newVal) - props.minValue)
-    }
-  }, 100)
-})
 </script>
+
 
 <template>
   <div class="container">
@@ -51,11 +37,12 @@ watch(localValue, (newVal) => {
       type="range"
       :min="props.minValue"
       :max="props.maxValue"
-      v-model.number="localValue"
+      v-model.number="displayValue"
     />
-    <div class="value">{{ localValue }}</div>
+    <div class="value">{{ displayValue }}</div>
   </div>
 </template>
+
 
 <style scoped>
 .container {

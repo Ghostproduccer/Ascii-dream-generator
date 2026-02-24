@@ -72,11 +72,64 @@ const sketch = (p) => {
     cols = Math.floor(p.width / tileW);
     rows = Math.floor(p.height / tileH);
 
+    p.background(0);
+    p.textSize(props.charSize);
+    p.fill(255);
+
+    const charSet = props.charSet;
+    const maxThreshold = Number(props.brightnessThreshold) || 255;
+
+    mainImage.loadPixels();
+
+    for (let y = 0; y < rows; y++) {
+      for (let x = 0; x < cols; x++) {
+        const px = Math.floor((x * mainImage.width) / cols);
+        const py = Math.floor((y * mainImage.height) / rows);
+        const idx = 4 * (py * mainImage.width + px);
+
+        const r = mainImage.pixels[idx];
+        const g = mainImage.pixels[idx + 1];
+        const b = mainImage.pixels[idx + 2];
+        const bright = (r + g + b) / 3;
+
+        const index = Math.floor(
+          p.map(
+            bright,
+            0,
+            maxThreshold,
+            props.invert ? charSet.length - 1 : 0,
+            props.invert ? 0 : charSet.length - 1,
+          ),
+        );
+
+        const c = charSet.charAt(
+          Math.max(0, Math.min(charSet.length - 1, index)),
+        );
+
+        const xPos = x * tileW + tileW / 2;
+        const yPos = y * tileH + tileH / 2;
+
+        p.text(c, xPos, yPos);
+      }
+    }
+    // Heavy generation debounced
+    debouncedGenerateOutputs();
+  };
+
+  let debounceTimer = null;
+  const debouncedGenerateOutputs = () => {
+    if (debounceTimer) clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(generateOutputs, 250);
+  };
+
+  const generateOutputs = () => {
+    if (!props.image || !mainImage) return;
+
     const fontURL =
       "https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/font/SourceCodePro-Bold.otf";
 
     const svgLines = [
-      `<svg xmlns="http://www.w3.org/2000/svg" width="${p.width}" height="${p.height}" style="background-color: black;">`,
+      `<svg xmlns="http://www.w3.org/2000/svg" width="${p.width}" height="${p.height}">`,
       `  <style>`,
       `    @font-face {`,
       `      font-family: 'SourceCodePro-ASCII';`,
@@ -87,13 +140,9 @@ const sketch = (p) => {
       `  <g font-family="'SourceCodePro-ASCII', 'Source Code Pro', monospace" font-weight="bold" font-size="${props.charSize}px" fill="white" text-anchor="middle" dominant-baseline="middle">`,
     ];
 
-    p.background(0);
-    p.textSize(props.charSize);
+    let asciiLines = [];
     const charSet = props.charSet;
     const maxThreshold = Number(props.brightnessThreshold) || 255;
-
-    mainImage.loadPixels();
-    let asciiLines = [];
 
     for (let y = 0; y < rows; y++) {
       let line = "";
@@ -125,27 +174,21 @@ const sketch = (p) => {
 
         const xPos = x * tileW + tileW / 2;
         const yPos = y * tileH + tileH / 2;
-
-        // Canvas rendering
-        p.fill(255);
-        p.text(c, xPos, yPos);
-
-        // SVG rendering
         const safeChar = escapeXML(c);
         svgLines.push(`<text x="${xPos}" y="${yPos}">${safeChar}</text>`);
       }
       asciiLines.push(line);
     }
 
-    svgLines.push(`</g>`) + svgLines.push(`</svg>`);
+    svgLines.push(`</g>`);
+    svgLines.push(`</svg>`);
 
     asciiSvg.value = svgLines.join("\n");
-
     asciiText.value = asciiLines.join("\n");
-    console.log(asciiText.value);
   };
 
   p.draw = renderASCII;
+
 };
 
 // File handler
